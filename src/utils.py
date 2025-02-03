@@ -37,24 +37,37 @@ def reading_json_file(path: str) -> list[dict]:
 
 
 def reading_xlsx(path: str) -> pd.DataFrame:
-    """Функция, которая принимает на вход путь до XLSX-файла
-        и возвращает датафрейм по операциям."""
+    """Функция, которая читает XLSX-файл и возвращает датафрейм."""
     try:
-        fieldnames = {'Дата операции': str, 'Номер карты': str,
-                      'Статус': str, 'Сумма операции': float, 'Валюта операции': str,
-                      'Сумма платежа': float, 'Валюта платежа': str,
-                      'Категория': str, 'Описание': str}
-        df = pd.read_excel(path, decimal=';', dtype=fieldnames)[['Дата операции',
-                                                                 'Номер карты',
-                                                                 'Статус',
-                                                                 'Сумма операции',
-                                                                 'Валюта операции',
-                                                                 'Сумма платежа',
-                                                                 'Валюта платежа',
-                                                                 'Категория',
-                                                                 'Описание']]
-        df['Дата операции'] = pd.to_datetime(df['Дата операции'], dayfirst=True)
+        dtypes = {
+            'Дата операции': str,
+            'Номер карты': str,
+            'Статус': str,
+            'Сумма операции': float,
+            'Валюта операции': str,
+            'Сумма платежа': float,
+            'Валюта платежа': str,
+            'Категория': str,
+            'Описание': str
+        }
+
+        df = pd.read_excel(
+            path,
+            decimal=',',
+            dtype=dtypes,
+            usecols=list(dtypes.keys())
+        )
+
+        # Преобразуем дату с указанием формата (пример: 'dd.mm.yyyy')
+        df['Дата операции'] = pd.to_datetime(
+            df['Дата операции'],
+            format='%d.%m.%Y',  # Формат зависит от данных
+            errors='coerce'
+        )
+
+        df = df.dropna(subset=['Дата операции'])  # Удаляем некорректные даты
         return df
+
     except FileNotFoundError:
         return pd.DataFrame()
 

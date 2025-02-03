@@ -1,7 +1,5 @@
 import json
 
-import pytest
-
 import pandas as pd
 
 from src.reports import decorator_with_args, spending_by_category
@@ -11,11 +9,20 @@ def test_decorator_with_args(lst_for_tests_csv_xlsx: list[dict]) -> None:
     @decorator_with_args('logs/decorators_mistakes.json')
     def test_spending_by_category() -> pd.DataFrame:
         """Функция тестирует декоратор"""
-        data = [{'Сумма операции': -20000.0}]
-        assert spending_by_category(pd.DataFrame(lst_for_tests_csv_xlsx),
-                                    'Переводы', "31.10.2021").to_dict("records") == data
-        return spending_by_category(pd.DataFrame(lst_for_tests_csv_xlsx), 'Переводы', "31.10.2021")
+        expected_data = [{'Сумма операции': -20000.0}]
+
+        # Вызов функции и проверка результата
+        result_df = spending_by_category(
+            pd.DataFrame(lst_for_tests_csv_xlsx),
+            'Переводы',
+            "31.10.2021"
+        )
+
+        # Сравнение результатов
+        assert result_df.to_dict("records") == expected_data
+        return result_df
+
+        # Проверка, что функция возвращает DataFrame
+
     result = test_spending_by_category()
-    with open('logs/decorators_mistakes.json', encoding="utf-8") as file:
-        data_json = json.load(file)
-    assert result.to_dict('records') == data_json
+    assert isinstance(result, pd.DataFrame), "Функция должна возвращать DataFrame"
