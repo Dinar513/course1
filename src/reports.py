@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 
 def decorator_with_args(file: str):
-    """Функция, которая записывает результаты """
+    """Функция, которая записыват результаты """
     def my_big_decorator(func):
         def wrapper(*args, **kwargs):
             try:
