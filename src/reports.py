@@ -26,7 +26,7 @@ def decorator_with_args(file: str):
 @decorator_with_args('logs/decorators_mistakes.json')
 def spending_by_category(transactions: pd.DataFrame,
                          category: str,
-                         date: Optional[str] = str(datetime.now())) -> pd.DataFrame:
+                         date: Optional[str] = str(datetime.now())) -> float:
     """Функция, которая возвращает датафрейм с тратами по заданной категории
        за последние три месяца (от переданной даты)."""
     transactions['Дата операции'] = pd.to_datetime(transactions['Дата операции'], dayfirst=True)
