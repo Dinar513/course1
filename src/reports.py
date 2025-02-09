@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 
 def decorator_with_args(file: str):
-    """Функция, которая записыват результаты """
+    """Декоратор с параметром, который записывает результаты в указанный файл."""
     def my_big_decorator(func):
         def wrapper(*args, **kwargs):
             try:
@@ -23,7 +23,24 @@ def decorator_with_args(file: str):
     return my_big_decorator
 
 
+def decorator_without_args(func):
+    """Декоратор без параметра, который записывает результаты в файл с именем по умолчанию."""
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            # Генерируем имя файла на основе текущей даты и времени
+            default_file = f"logs/report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            os.makedirs(os.path.dirname(default_file), exist_ok=True)
+            with open(default_file, "w", encoding="utf-8") as file:
+                json.dump(result.to_dict("records"), file, ensure_ascii=False)
+        except Exception as e:
+            print(f"Ошибка при записи файла: {e}")
+        return result  # Возвращаем результат даже при ошибке
+    return wrapper
+
+
 @decorator_with_args('logs/decorators_mistakes.json')
+@decorator_without_args
 def spending_by_category(transactions: pd.DataFrame,
                          category: str,
                          date: Optional[str] = str(datetime.now())) -> float:
