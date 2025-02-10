@@ -97,7 +97,7 @@ def external_api_marketstack() -> list[dict]:
     try:
         logger.info('Попытка подключения через API к сайту со стоимостью акций')
         for i in user_stocks:
-            url = f"http://api.marketstack.com/v1/intraday?access_key={apikey}&symbols={i}&sort=DESC&limit=1"
+            url = f"http://api.marketstack.com/v1/eod?access_key={apikey}&symbols={i}&sort=DESC&limit=1"
             response = requests.get(url)
             dct = {"stock": i, "price": response.json()['data'][0]['close']}
             logger.info('Успешное подключение через API к сайту со стоимостью акций')

@@ -7,7 +7,7 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 
 
-def decorator_with_args(file: str):
+def decorator_with_args(file: str = 'default.json'):
     """Декоратор с параметром, который записывает результаты в указанный файл."""
     def my_big_decorator(func):
         def wrapper(*args, **kwargs):
